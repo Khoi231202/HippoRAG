@@ -32,8 +32,8 @@ one_shot_passage_triples = """{"triples": [
 
 ## NER Prompts
 
-ner_instruction = """Your task is to extract named entities from the given paragraph. 
-Respond with a JSON list of entities.
+ner_instruction = """Nhiệm vụ của bạn là trích xuất các named_entities từ đoạn văn đã cho. 
+Hãy trả lời bằng một danh sách JSON chứa các named_entities.
 """
 
 ner_input_one_shot = """Paragraph:

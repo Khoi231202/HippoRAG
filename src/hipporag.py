@@ -339,7 +339,7 @@ class HippoRAG:
         if self.corpus_path is None:
             self.corpus_path = 'data/{}_corpus.json'.format(self.corpus_name)
         assert os.path.isfile(self.corpus_path), 'Corpus file not found'
-        self.corpus = json.load(open(self.corpus_path, 'r',encoding='utf-8'), ensure_ascii=False)
+        self.corpus = json.load(open(self.corpus_path, 'r',encoding='utf-8'))
         self.dataset_df = pd.DataFrame()
         self.dataset_df['paragraph'] = [p['title'] + '\n' + p['text'] for p in self.corpus]
 
@@ -353,7 +353,7 @@ class HippoRAG:
             [int(file.split('{}_'.format(self.extraction_model_name_processed))[1].split('.json')[0]) for file in possible_files])
         extracted_file = json.load(open(
             'output/openie_{}_results_{}_{}_{}.json'.format(self.corpus_name, self.extraction_type, self.extraction_model_name_processed, max_samples),
-            'r', encoding='utf-8'), ensure_ascii=False)
+            'r', encoding='utf-8'))
 
         self.extracted_triples = extracted_file['docs']
 
