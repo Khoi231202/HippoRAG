@@ -83,7 +83,7 @@ class HippoRAG:
         self.logger = logging.getLogger(__name__)
 
         try:
-            self.named_entity_cache = pd.read_csv('output/{}_queries.named_entity_output.tsv'.format(self.corpus_name), sep='\t')
+            self.named_entity_cache = pd.read_csv('output/{}_queries.named_entity_output.tsv'.format(self.corpus_name), sep='\t', encoding='utf-8')
         except Exception as e:
             self.named_entity_cache = pd.DataFrame([], columns=['query', 'triples'])
 

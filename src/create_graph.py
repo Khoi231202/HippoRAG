@@ -105,7 +105,7 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
     print('Correct Wiki Format: {} out of {}'.format(correct_wiki_format, len(extracted_triples)))
 
     try:
-        queries_full = pd.read_csv('output/{}_queries.named_entity_output.tsv'.format(dataset), sep='\t')
+        queries_full = pd.read_csv('output/{}_queries.named_entity_output.tsv'.format(dataset), sep='\t', encoding='utf-8')
 
         if 'hotpotqa' in args.dataset:
             queries = json.load(open(f'data/{args.dataset}.json', 'r'))
@@ -140,18 +140,18 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
     kb['type'] = 'query'
     kb2['type'] = 'kb'
     kb_full = pd.concat([kb, kb2])
-    kb_full.to_csv('output/kb_to_kb.tsv', sep='\t')
+    kb_full.to_csv('output/kb_to_kb.tsv', sep='\t', encoding='utf-8')
     rel_kb = pd.DataFrame(unique_relations, columns=['strings'])
     rel_kb2 = copy.deepcopy(rel_kb)
     rel_kb['type'] = 'query'
     rel_kb2['type'] = 'kb'
     rel_kb_full = pd.concat([rel_kb, rel_kb2])
-    rel_kb_full.to_csv('output/rel_kb_to_kb.tsv', sep='\t')
+    rel_kb_full.to_csv('output/rel_kb_to_kb.tsv', sep='\t', encoding='utf-8')
     query_df = pd.DataFrame(q_phrases, columns=['strings'])
     query_df['type'] = 'query'
     kb['type'] = 'kb'
     kb_query = pd.concat([kb, query_df])
-    kb_query.to_csv('output/query_to_kb.tsv', sep='\t')
+    kb_query.to_csv('output/query_to_kb.tsv', sep='\t', encoding='utf-8')
 
     if create_graph_flag:
         print('Creating Graph')

@@ -111,7 +111,7 @@ if __name__ == '__main__':
             query_name = 'question'
 
         try:
-            output_df = pd.read_csv(output_file, sep='\t')
+            output_df = pd.read_csv(output_file, sep='\t', encoding='utf-8')
         except:
             output_df = []
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
             current_cost = 0.002 * chatgpt_total_tokens / 1000
 
             queries_df['triples'] = query_triples
-            queries_df.to_csv(output_file, sep='\t')
+            queries_df.to_csv(output_file, sep='\t', encoding='utf-8')
             print('Passage NER saved to', output_file)
         else:
             print('Passage NER already saved to', output_file)
