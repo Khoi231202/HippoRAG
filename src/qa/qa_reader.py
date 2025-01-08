@@ -29,10 +29,10 @@ def remove_newlines_after_first(s):
 
 
 cot_system_instruction = ('Là một trợ lý hỗ trợ đọc hiểu nâng cao, nhiệm vụ của bạn là phân tích kỹ lưỡng các đoạn văn bản và các câu hỏi tương ứng. '
-                          'Phản hồi của bạn bắt đầu sau "Suy nghĩ: ", nơi bạn sẽ phân tích phương pháp suy luận một cách cẩn thận, minh họa cách bạn đi đến kết luận. '
+                          'Phản hồi Tiếng Việt của bạn bắt đầu sau "Suy nghĩ: ", nơi bạn sẽ phân tích phương pháp suy luận một cách cẩn thận, minh họa cách bạn đi đến kết luận. '
                           'Kết thúc bằng "Đáp án: " để trình bày một câu trả lời ngắn gọn và dứt khoát, không bổ sung thêm diễn giải nào khác. ')
 cot_system_instruction_no_doc = ('Là một trợ lý hỗ trợ đọc hiểu nâng cao, nhiệm vụ của bạn là phân tích các câu hỏi và sau đó trả lời chúng. '
-                                 'Phản hồi của bạn bắt đầu sau "Suy nghĩ: ", nơi bạn sẽ phân tích phương pháp suy luận một cách có hệ thống, minh họa cách bạn đi đến kết luận. '
+                                 'Phản hồi Tiếng Việt của bạn bắt đầu sau "Suy nghĩ: ", nơi bạn sẽ phân tích phương pháp suy luận một cách có hệ thống, minh họa cách bạn đi đến kết luận. '
                                  'Kết thúc bằng "Đáp án: " để trình bày một câu trả lời ngắn gọn và dứt khoát, không thêm bất kỳ diễn giải nào khác.')
 
 
