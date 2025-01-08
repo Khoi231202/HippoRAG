@@ -168,9 +168,9 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
         lose_fact_dict = {f: i for i, f in enumerate(lose_facts)}
         fact_json = [{'idx': i, 'head': t[0], 'relation': t[1], 'tail': t[2]} for i, t in enumerate(lose_facts)]
 
-        json.dump(passage_json, open('output/{}_{}_graph_passage_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
-        json.dump(node_json, open('output/{}_{}_graph_nodes_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
-        json.dump(fact_json, open('output/{}_{}_graph_clean_facts_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
+        json.dump(passage_json, open('output/{}_{}_graph_passage_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'), ensure_ascii=False)
+        json.dump(node_json, open('output/{}_{}_graph_nodes_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'), ensure_ascii=False)
+        json.dump(fact_json, open('output/{}_{}_graph_clean_facts_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'), ensure_ascii=False)
 
         pickle.dump(kb_phrase_dict, open('output/{}_{}_graph_phrase_dict_{}_{}.{}.subset.p'.format(dataset, graph_type, phrase_type, extraction_type, version), 'wb'))
         pickle.dump(lose_fact_dict, open('output/{}_{}_graph_fact_dict_{}_{}.{}.subset.p'.format(dataset, graph_type, phrase_type, extraction_type, version), 'wb'))
@@ -339,7 +339,7 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
                                                                                            phrase_type, extraction_type, similarity_max, processed_retriever_name, version), 'wb'))
 
         json.dump(graph_json, open('output/{}_{}_graph_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type,
-                                                                                                   extraction_type, version), 'w', encoding='utf-8'))
+                                                                                                   extraction_type, version), 'w', encoding='utf-8'), ensure_ascii=False)
 
 
 if __name__ == '__main__':

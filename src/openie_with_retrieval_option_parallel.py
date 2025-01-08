@@ -68,7 +68,7 @@ def named_entity_recognition(passage: str):
 
 def openie_post_ner_extract(passage: str, entities: list, model: str):
     named_entity_json = {"named_entities": entities}
-    openie_messages = openie_post_ner_prompts.format_prompt(passage=passage, named_entity_json=json.dumps(named_entity_json))
+    openie_messages = openie_post_ner_prompts.format_prompt(passage=passage, named_entity_json=json.dumps(named_entity_json, ensure_ascii=False))
 
     not_done = True
     while not_done:
@@ -272,7 +272,7 @@ if __name__ == '__main__':
                            "approx_total_tokens": approx_total_tokens,
                            }
         output_path = 'output/openie{}_results_{}.json'.format(dataset, arg_str)
-        # json.dump(extra_info_json, open(output_path, 'w'))
-        with open(output_path, 'w', encoding='utf-8') as file:
-            json.dump(extra_info_json, file, ensure_ascii=False)
+        json.dump(extra_info_json, open(output_path, 'w', encoding='utf-8'), ensure_ascii=False)
+        # with open(output_path, 'w', encoding='utf-8') as file:
+        #     json.dump(extra_info_json, file, ensure_ascii=False)
         print('OpenIE saved to', output_path)
