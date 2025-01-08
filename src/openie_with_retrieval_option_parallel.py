@@ -113,7 +113,7 @@ if __name__ == '__main__':
     num_passages = args.num_passages
     model_name = args.model_name
 
-    corpus = json.load(open(f'data/{dataset}_corpus.json', 'r'))
+    corpus = json.load(open(f'data/{dataset}_corpus.json', 'r', encoding='utf-8'))
 
     if 'hotpotqa' in dataset:
         keys = list(corpus.keys())
@@ -153,7 +153,7 @@ if __name__ == '__main__':
         new_json_temp = None
 
         for file in glob('output/openie{}_results_{}.json'.format(dataset, arg_str_regex)):
-            possible_json = json.load(open(file, 'r'))
+            possible_json = json.load(open(file, 'r', encoding='utf-8'))
             if prev_num_passages < len(possible_json['docs']):
                 prev_num_passages = len(possible_json['docs'])
                 new_json_temp = possible_json
@@ -181,7 +181,7 @@ if __name__ == '__main__':
 
     if len(auxiliary_files) > 0:
         for auxiliary_file in auxiliary_files:
-            aux_info_json = json.load(open(auxiliary_file, 'r'))
+            aux_info_json = json.load(open(auxiliary_file, 'r', encoding='utf-8'))
             if len(aux_info_json['docs']) >= num_passages:
                 ents_by_doc = aux_info_json["ents_by_doc"]
                 auxiliary_file_exists = True

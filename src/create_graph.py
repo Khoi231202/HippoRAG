@@ -21,7 +21,7 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
     similarity_max = 1.0
     possible_files = glob('output/openie_{}_results_{}_{}_*.json'.format(dataset, extraction_type, extraction_model))
     max_samples = np.max([int(file.split('{}_'.format(extraction_model))[1].split('.json')[0]) for file in possible_files])
-    extracted_file = json.load(open('output/openie_{}_results_{}_{}_{}.json'.format(dataset, extraction_type, extraction_model, max_samples), 'r'))
+    extracted_file = json.load(open('output/openie_{}_results_{}_{}_{}.json'.format(dataset, extraction_type, extraction_model, max_samples), 'r', encoding='utf-8'))
 
     extracted_triples = extracted_file['docs']
     if extraction_model != 'gpt-3.5-turbo-1106':
@@ -108,7 +108,7 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
         queries_full = pd.read_csv('output/{}_queries.named_entity_output.tsv'.format(dataset), sep='\t', encoding='utf-8')
 
         if 'hotpotqa' in args.dataset:
-            queries = json.load(open(f'data/{args.dataset}.json', 'r'))
+            queries = json.load(open(f'data/{args.dataset}.json', 'r', encoding='utf-8'))
             questions = [q['question'] for q in queries]
             queries_full = queries_full.set_index('0', drop=False)
         else:
@@ -168,9 +168,9 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
         lose_fact_dict = {f: i for i, f in enumerate(lose_facts)}
         fact_json = [{'idx': i, 'head': t[0], 'relation': t[1], 'tail': t[2]} for i, t in enumerate(lose_facts)]
 
-        json.dump(passage_json, open('output/{}_{}_graph_passage_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w'))
-        json.dump(node_json, open('output/{}_{}_graph_nodes_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w'))
-        json.dump(fact_json, open('output/{}_{}_graph_clean_facts_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w'))
+        json.dump(passage_json, open('output/{}_{}_graph_passage_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
+        json.dump(node_json, open('output/{}_{}_graph_nodes_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
+        json.dump(fact_json, open('output/{}_{}_graph_clean_facts_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type, extraction_type, version), 'w', encoding='utf-8'))
 
         pickle.dump(kb_phrase_dict, open('output/{}_{}_graph_phrase_dict_{}_{}.{}.subset.p'.format(dataset, graph_type, phrase_type, extraction_type, version), 'wb'))
         pickle.dump(lose_fact_dict, open('output/{}_{}_graph_fact_dict_{}_{}.{}.subset.p'.format(dataset, graph_type, phrase_type, extraction_type, version), 'wb'))
@@ -339,7 +339,7 @@ def create_graph(dataset: str, extraction_type: str, extraction_model: str, retr
                                                                                            phrase_type, extraction_type, similarity_max, processed_retriever_name, version), 'wb'))
 
         json.dump(graph_json, open('output/{}_{}_graph_chatgpt_openIE.{}_{}.{}.subset.json'.format(dataset, graph_type, phrase_type,
-                                                                                                   extraction_type, version), 'w'))
+                                                                                                   extraction_type, version), 'w', encoding='utf-8'))
 
 
 if __name__ == '__main__':
