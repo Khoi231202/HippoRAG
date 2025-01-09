@@ -21,14 +21,13 @@ from tqdm import tqdm
 
 from src.langchain_util import init_langchain_model
 
-query_prompt_one_shot_input = """Please extract all named entities that are important for solving the questions below.
-Place the named entities in json format.
+query_prompt_one_shot_input = """Vui lòng trích xuất tất cả các named entities quan trọng để giải quyết các câu hỏi dưới đây. 
+Đặt các named entities vào định dạng JSON.
 
-Question: Which magazine was started first Arthur's Magazine or First for Women?
-
+Question: miêu tả xe vf 3 và vf 7 của vinfast.
 """
 query_prompt_one_shot_output = """
-{"named_entities": ["First for Women", "Arthur's Magazine"]}
+{"named_entities": ["vf 3", "vf7", "vinfast"]}
 """
 
 query_prompt_template = """
@@ -38,7 +37,7 @@ Question: {}
 
 
 def named_entity_recognition(client, text: str):
-    query_ner_prompts = ChatPromptTemplate.from_messages([SystemMessage("You're a very effective entity extraction system."),
+    query_ner_prompts = ChatPromptTemplate.from_messages([SystemMessage("Bạn là hệ thống trích xuất named entities hiệu quả."),
                                                           HumanMessage(query_prompt_one_shot_input),
                                                           AIMessage(query_prompt_one_shot_output),
                                                           HumanMessage(query_prompt_template.format(text))])
