@@ -10,7 +10,7 @@ from src.processing import mean_pooling_embedding_with_normalization, mean_pooli
 
 
 class HuggingFaceWrapper(EmbeddingModelWrapper):
-    def __init__(self, model_name: str, device='cuda'):
+    def __init__(self, model_name: str, device='cpu'):
         self.model_name = model_name
         self.model_name_processed = model_name.replace('/', '_').replace('.', '_')
         self.model = AutoModel.from_pretrained(model_name).to(device)

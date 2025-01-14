@@ -104,7 +104,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_passages', type=str, default='10')
     parser.add_argument('--llm', type=str, default='openai', help="LLM, e.g., 'openai' or 'together'")
     parser.add_argument('--model_name', type=str, default='gpt-3.5-turbo-1106', help='Specific model name')
-    parser.add_argument('--num_processes', type=int, default=10)
+    parser.add_argument('--num_processes', type=int, default=1)
 
     args = parser.parse_args()
 

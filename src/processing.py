@@ -15,7 +15,7 @@ def mean_pooling(token_embeddings, mask):
     return sentence_embeddings
 
 
-def mean_pooling_embedding(input_str: str, tokenizer, model, device='cuda'):
+def mean_pooling_embedding(input_str: str, tokenizer, model, device='cpu'):
     inputs = tokenizer(input_str, padding=True, truncation=True, return_tensors='pt').to(device)
     outputs = model(**inputs)
 
@@ -23,7 +23,7 @@ def mean_pooling_embedding(input_str: str, tokenizer, model, device='cuda'):
     return embedding
 
 
-def mean_pooling_embedding_with_normalization(input_str, tokenizer, model, device='cuda'):
+def mean_pooling_embedding_with_normalization(input_str, tokenizer, model, device='cpu'):
     encoding = tokenizer(input_str, return_tensors='pt', padding=True, truncation=True)
     input_ids = encoding['input_ids']
     attention_mask = encoding['attention_mask']

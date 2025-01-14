@@ -496,7 +496,7 @@ class HippoRAG:
         self.strings = [s.strip() for s in self.strings]
         self.string_to_id = {string: i for i, string in enumerate(self.strings)}
         kb_mat = kb_mat.T.divide(torch.linalg.norm(kb_mat, dim=1)).T
-        kb_mat = kb_mat.to('cuda')
+        kb_mat = kb_mat.to('cpu')
         kb_only_indices = []
         num_non_vector_phrases = 0
         for i in range(len(self.kb_node_phrase_to_id)):

@@ -100,7 +100,7 @@ class RetrievalModule:
         pickle.dump(nearest_neighbors, open(self.retrieval_name_dir + '/nearest_neighbor_{}.p'.format(string_filename.split('/')[1].split('.')[0]), 'wb'))
 
     def get_precomputed_plm_vectors(self, retrieval_name_dir):
-
+        print('get_precomputed_plm_vectors')
         # Load or Create a DataFrame sorted by phrase length for efficient PLM computation
         strings = self.load_precomp_strings(retrieval_name_dir)
         vectors = self.load_plm_vectors(retrieval_name_dir)
@@ -108,6 +108,7 @@ class RetrievalModule:
         return strings, vectors
 
     def create_sorted_df(self, strings):
+        print('create_sorted_df')
         lengths = []
 
         for string in tqdm(strings):
@@ -119,6 +120,7 @@ class RetrievalModule:
         return lengths_df.sort_values(0)
 
     def save_vecs(self, strings, vectors, direc_name, bin_size=50000):
+        print('save_vecs')
         with open(direc_name + '/encoded_strings.txt', 'w') as f:
             for string in strings:
                 f.write(string + '\n')
@@ -129,6 +131,7 @@ class RetrievalModule:
             pickle.dump(vecs, open(direc_name + '/vecs_{}.p'.format(i), 'wb'))
 
     def load_precomp_strings(self, retrieval_name_dir):
+        print('load_precomp_strings')
         filename = retrieval_name_dir + '/encoded_strings.txt'
 
         if not (os.path.exists(filename)):
@@ -141,6 +144,7 @@ class RetrievalModule:
         return lines
 
     def load_plm_vectors(self, retrieval_name_dir):
+        print('load_plm_vectors')
         vectors = []
 
         print('Loading PLM Vectors.')
@@ -161,10 +165,12 @@ class RetrievalModule:
         return vectors
 
     def find_missing_strings(self, relevant_strings, precomputed_strings):
+        print('find_missing_strings')
 
         return list(set(relevant_strings).difference(set(precomputed_strings)))
 
     def make_dictionary(self, sorted_df, precomp_strings, precomp_vectors):
+        print('make_dictionary')
 
         print('Populating Vector Dict')
         precomp_string_ids = {}
@@ -186,7 +192,8 @@ class RetrievalModule:
         return vector_dict
 
     def encode_strings(self, strs_to_encode, pool_method):
-        self.plm.to('cuda')
+        print('encode_strings')
+        self.plm.to('cpu')
         tokenizer = AutoTokenizer.from_pretrained(self.retriever_name)
 
         # Sorting Strings by length
@@ -196,43 +203,40 @@ class RetrievalModule:
         all_cls = []
         all_strings = []
         num_strings_proc = 0
-
+        print("111111111111")
         with torch.no_grad():
-
             batch_sizes = []
-
             text_batch = []
             max_pad_size = 0
 
             for i, string in tqdm(enumerate(strs_to_encode), total=len(strs_to_encode)):
-
                 length = len(tokenizer.tokenize(string))
-
                 text_batch.append(string)
                 num_strings_proc += 1
 
                 if length > max_pad_size:
                     max_pad_size = length
 
-                if max_pad_size * len(text_batch) > 50000 or num_strings_proc == len(strs_to_encode):
-
+                # Reduce the value from 10000 to a smaller value, e.g., 5000
+                if max_pad_size * len(text_batch) > 10000 or num_strings_proc == len(strs_to_encode):
+                    print(f"Processing batch of size: {len(text_batch)}")
                     text_batch = list(text_batch)
                     encoding = tokenizer(text_batch, return_tensors='pt', padding=True, truncation=True,
                                          max_length=self.plm.config.max_length)
                     input_ids = encoding['input_ids']
                     attention_mask = encoding['attention_mask']
-
-                    input_ids = input_ids.to('cuda')
-                    attention_mask = attention_mask.to('cuda')
+                    
+                    input_ids = input_ids.to('cpu')
+                    attention_mask = attention_mask.to('cpu')
 
                     outputs = self.plm(input_ids, attention_mask=attention_mask)
-
+                    
                     if pool_method == 'cls':
                         embeddings = outputs[0][:, 0, :]
 
                     elif pool_method == 'mean':
                         embeddings = mean_pooling(outputs[0], attention_mask)
-
+                    
                     all_cls.append(embeddings.cpu().numpy())
                     all_strings.extend(text_batch)
 
@@ -240,16 +244,16 @@ class RetrievalModule:
 
                     text_batch = []
                     max_pad_size = 0
-
+        print("222222222222")
         all_cls = np.vstack(all_cls)
 
         assert len(all_cls) == len(all_strings)
         assert all([all_strings[i] == strs_to_encode[i] for i in range(len(all_strings))])
-
+        print("333333333333")
         return all_cls, all_strings
 
     def retrieve_knn(self, queries, knowledge_base, k=2047):
-
+        print('retrieve_knn')
         original_vecs = []
         new_vecs = []
 
@@ -288,29 +292,16 @@ class RetrievalModule:
         current_zero_index = 0
 
         for num, index_chunk in enumerate(index_chunks):
-
             print('Running Index Part {}'.format(num))
             index = faiss.IndexFlat(dim, faiss.METRIC_INNER_PRODUCT)  # build the index
 
-            if faiss.get_num_gpus() > 1:
-                gpu_resources = []
-
-                for i in range(faiss.get_num_gpus()):
-                    res = faiss.StandardGpuResources()
-                    gpu_resources.append(res)
-
-                gpu_index = faiss.index_cpu_to_gpu_multiple_py(gpu_resources, index)
-            else:
-                gpu_resources = faiss.StandardGpuResources()
-                gpu_index = faiss.index_cpu_to_gpu(gpu_resources, 0, index)
-
-            print()
-            gpu_index.add(index_chunk)
+            # Use CPU instead of GPU
+            index.add(index_chunk)
 
             D, I = [], []
 
             for q in tqdm(query_chunks):
-                d, i = gpu_index.search(q, k)
+                d, i = index.search(q, k)
 
                 i += current_zero_index
 
@@ -322,10 +313,7 @@ class RetrievalModule:
 
             current_zero_index += len(index_chunk)
 
-            #             print(subprocess.check_output(['nvidia-smi']))
-
-            del gpu_index
-            del gpu_resources
+            del index
             gc.collect()
 
         print('Combining Index Chunks')
